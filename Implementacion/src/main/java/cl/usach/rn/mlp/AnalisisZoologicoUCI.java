@@ -6,7 +6,6 @@ import java.io.FileReader;
 import weka.classifiers.Evaluation;
 import weka.classifiers.functions.MultilayerPerceptron;
 import weka.core.Instances;
-import weka.core.Utils;
 
 public class AnalisisZoologicoUCI {
 
@@ -14,26 +13,41 @@ public class AnalisisZoologicoUCI {
 		ClassLoader cargadorContexto = Thread.currentThread().getContextClassLoader();
 
 		try {
-			FileReader trainreader = new FileReader(new File(cargadorContexto.getResource("zoo.arff").toURI()));
-			FileReader testreader = new FileReader(new File(cargadorContexto.getResource("zoo.arff").toURI()));
+			// Lectura del set de entrenamiento y prueba. Se cierran los archivos inmediatamente, una vez leídas las instancias.
+			FileReader lectorEntrenamiento = new FileReader(new File(cargadorContexto.getResource("zoo.arff").toURI()));
+			FileReader lectorPrueba = new FileReader(new File(cargadorContexto.getResource("zoo.arff").toURI()));
+			Instances entrenamiento = new Instances(lectorEntrenamiento);
+			Instances prueba = new Instances(lectorPrueba);
+			lectorEntrenamiento.close();
+			lectorPrueba.close();
+			
+			// Establecemos la columna que tiene la clase
+			entrenamiento.setClassIndex(entrenamiento.numAttributes() - 1);
+			prueba.setClassIndex(prueba.numAttributes() - 1);
 
-			Instances train = new Instances(trainreader);
-			Instances test = new Instances(testreader);
-			train.setClassIndex(train.numAttributes() - 1);
-			test.setClassIndex(test.numAttributes() - 1);
-
+			// Perceptrón multicapa.
 			MultilayerPerceptron mlp = new MultilayerPerceptron();
-			System.out.println("Parámetros: -L 0.3 -M 0.2 -N 500 -V 0 -S 0 -E 20 -H 4");
-			mlp.setOptions(Utils.splitOptions("-L 0.3 -M 0.2 -N 500 -V 0 -S 0 -E 20 -H 4"));
 
-			mlp.buildClassifier(train);
+			// Parámetros:
+			mlp.setLearningRate(0.1);
+			mlp.setMomentum(0.1);
+			mlp.setTrainingTime(20000);
+			mlp.setSeed(0);
+			mlp.setValidationSetSize(0);
+			mlp.setValidationThreshold(20);
+			mlp.setHiddenLayers("4");
 
-			Evaluation eval = new Evaluation(train);
-			eval.evaluateModel(mlp, test);
-			System.out.println(eval.toSummaryString("\nResultados\n==========\n", false));
-			trainreader.close();
-			testreader.close();
+			// Se construye el clasificador
+			mlp.buildClassifier(entrenamiento);
 
+			// Se evalúa el modelo con el grupo de prueba
+			Evaluation eval = new Evaluation(entrenamiento);
+			eval.evaluateModel(mlp, prueba);
+			
+			// Imprimir todos los resultados.
+			System.out.println(eval.toSummaryString());
+			System.out.println(eval.toMatrixString());
+			System.out.println(mlp.toString());
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
