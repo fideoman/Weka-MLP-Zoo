@@ -1,0 +1,126 @@
+@RELATION zoo
+
+@ATTRIBUTE nombre 		{terra-cerdo,antílope,lubina,oso,jabalí,búfalo,novillo,carpa,bagre,cávido,guepardo,gallina,cacho,almeja,cangrejo,cigala,cuervo,ciervo,cazón,delfín,paloma,pato,elefante,flamenco,pulga,rana,mega-murciélago,jirafa,mosquito,cabra,gorila,gaviota,eglefino,hámster,liebre,águila,arenque,abeja,mosca,kiwi,chinita,cogujada,leopardo,león,langosta,lince,visón,topo,mangosta,polilla,gallipato,pulpo,zarigüeya,órice,avestruz,periquito,pingüino,faisán,lucio,piraña,crótalo,ornitorrinco,turón,poni,marsopa,puma,minino,mapache,reno,ñandú,escorpión,caballo-marino,foca,león-marino,hidroserpiente,medusa,rayador,págalo,lución,caracol,lenguado,gorrión,ardilla,asteroideos,mantarraya,cisne,termita,sapo,tortuga,tuátara,atún,vampiro,campañol,buitre,ualabí,avispa,lobo,gusano,chochín}
+@ATTRIBUTE peludo 		{false,true}
+@ATTRIBUTE emplumado 	{false,true}
+@ATTRIBUTE ovíparo 		{false,true}
+@ATTRIBUTE lechero 		{false,true}
+@ATTRIBUTE volador 		{false,true}
+@ATTRIBUTE acuático 	{false,true}
+@ATTRIBUTE depredador 	{false,true}
+@ATTRIBUTE dentado 		{false,true}
+@ATTRIBUTE vertebrado 	{false,true}
+@ATTRIBUTE respirador 	{false,true}
+@ATTRIBUTE venenoso 	{false,true}
+@ATTRIBUTE aletado 		{false,true}
+@ATTRIBUTE 0_patas 		{false,true}
+@ATTRIBUTE 2_patas 		{false,true}
+@ATTRIBUTE 4_patas 		{false,true}
+@ATTRIBUTE 5_patas 		{false,true}
+@ATTRIBUTE 6_patas 		{false,true}
+@ATTRIBUTE 8_patas 		{false,true}
+@ATTRIBUTE encolado 	{false,true}
+@ATTRIBUTE doméstico 	{false,true}
+@ATTRIBUTE pequeño 		{false,true}
+@ATTRIBUTE tipo 		{Mamífero,Ave,Reptil,Pez,Anfibio,Insecto,Molusco,Crustáceo,Arácnido,Celenterados,Equinodermos,Anélidos}
+
+@DATA
+terra-cerdo,true,false,false,true,false,false,true,true,true,true,false,false,false,false,true,false,false,false,false,false,true,Mamífero
+antílope,true,false,false,true,false,false,false,true,true,true,false,false,false,false,true,false,false,false,true,false,true,Mamífero
+lubina,false,false,true,false,false,true,true,true,true,false,false,true,true,false,false,false,false,false,true,false,false,Pez
+oso,true,false,false,true,false,false,true,true,true,true,false,false,false,false,true,false,false,false,false,false,true,Mamífero
+jabalí,true,false,false,true,false,false,true,true,true,true,false,false,false,false,true,false,false,false,true,false,true,Mamífero
+búfalo,true,false,false,true,false,false,false,true,true,true,false,false,false,false,true,false,false,false,true,false,true,Mamífero
+novillo,true,false,false,true,false,false,false,true,true,true,false,false,false,false,true,false,false,false,true,true,true,Mamífero
+carpa,false,false,true,false,false,true,false,true,true,false,false,true,true,false,false,false,false,false,true,true,false,Pez
+bagre,false,false,true,false,false,true,true,true,true,false,false,true,true,false,false,false,false,false,true,false,false,Pez
+cávido,true,false,false,true,false,false,false,true,true,true,false,false,false,false,true,false,false,false,false,true,false,Mamífero
+guepardo,true,false,false,true,false,false,true,true,true,true,false,false,false,false,true,false,false,false,true,false,true,Mamífero
+gallina,false,true,true,false,true,false,false,false,true,true,false,false,false,true,false,false,false,false,true,true,false,Ave
+cacho,false,false,true,false,false,true,true,true,true,false,false,true,true,false,false,false,false,false,true,false,false,Pez
+almeja,false,false,true,false,false,false,true,false,false,false,false,false,true,false,false,false,false,false,false,false,false,Molusco
+cangrejo,false,false,true,false,false,true,true,false,false,false,false,false,false,false,true,false,false,false,false,false,false,Crustáceo
+cigala,false,false,true,false,false,true,true,false,false,false,false,false,false,false,false,false,true,false,false,false,false,Crustáceo
+cuervo,false,true,true,false,true,false,true,false,true,true,false,false,false,true,false,false,false,false,true,false,false,Ave
+ciervo,true,false,false,true,false,false,false,true,true,true,false,false,false,false,true,false,false,false,true,false,true,Mamífero
+cazón,false,false,true,false,false,true,true,true,true,false,false,true,true,false,false,false,false,false,true,false,true,Pez
+delfín,false,false,false,true,false,true,true,true,true,true,false,true,true,false,false,false,false,false,true,false,true,Mamífero
+paloma,false,true,true,false,true,false,false,false,true,true,false,false,false,true,false,false,false,false,true,true,false,Ave
+pato,false,true,true,false,true,true,false,false,true,true,false,false,false,true,false,false,false,false,true,false,false,Ave
+elefante,true,false,false,true,false,false,false,true,true,true,false,false,false,false,true,false,false,false,true,false,true,Mamífero
+flamenco,false,true,true,false,true,false,false,false,true,true,false,false,false,true,false,false,false,false,true,false,true,Ave
+pulga,false,false,true,false,false,false,false,false,false,true,false,false,false,false,false,false,true,false,false,false,false,Insecto
+rana,false,false,true,false,false,true,true,true,true,true,true,false,false,false,true,false,false,false,false,false,false,Anfibio
+mega-murciélago,true,false,false,true,true,false,false,true,true,true,false,false,false,true,false,false,false,false,true,false,false,Mamífero
+jirafa,true,false,false,true,false,false,false,true,true,true,false,false,false,false,true,false,false,false,true,false,true,Mamífero
+mosquito,false,false,true,false,true,false,false,false,false,true,false,false,false,false,false,false,true,false,false,false,false,Insecto
+cabra,true,false,false,true,false,false,false,true,true,true,false,false,false,false,true,false,false,false,true,true,true,Mamífero
+gorila,true,false,false,true,false,false,false,true,true,true,false,false,false,true,false,false,false,false,false,false,true,Mamífero
+gaviota,false,true,true,false,true,true,true,false,true,true,false,false,false,true,false,false,false,false,true,false,false,Ave
+eglefino,false,false,true,false,false,true,false,true,true,false,false,true,true,false,false,false,false,false,true,false,false,Pez
+hámster,true,false,false,true,false,false,false,true,true,true,false,false,false,false,true,false,false,false,true,true,false,Mamífero
+liebre,true,false,false,true,false,false,false,true,true,true,false,false,false,false,true,false,false,false,true,false,false,Mamífero
+águila,false,true,true,false,true,false,true,false,true,true,false,false,false,true,false,false,false,false,true,false,false,Ave
+arenque,false,false,true,false,false,true,true,true,true,false,false,true,true,false,false,false,false,false,true,false,false,Pez
+abeja,true,false,true,false,true,false,false,false,false,true,true,false,false,false,false,false,true,false,false,true,false,Insecto
+mosca,true,false,true,false,true,false,false,false,false,true,false,false,false,false,false,false,true,false,false,false,false,Insecto
+kiwi,false,true,true,false,false,false,true,false,true,true,false,false,false,true,false,false,false,false,true,false,false,Ave
+chinita,false,false,true,false,true,false,true,false,false,true,false,false,false,false,false,false,true,false,false,false,false,Insecto
+cogujada,false,true,true,false,true,false,false,false,true,true,false,false,false,true,false,false,false,false,true,false,false,Ave
+leopardo,true,false,false,true,false,false,true,true,true,true,false,false,false,false,true,false,false,false,true,false,true,Mamífero
+león,true,false,false,true,false,false,true,true,true,true,false,false,false,false,true,false,false,false,true,false,true,Mamífero
+langosta,false,false,true,false,false,true,true,false,false,false,false,false,false,false,false,false,true,false,false,false,false,Crustáceo
+lince,true,false,false,true,false,false,true,true,true,true,false,false,false,false,true,false,false,false,true,false,true,Mamífero
+visón,true,false,false,true,false,true,true,true,true,true,false,false,false,false,true,false,false,false,true,false,true,Mamífero
+topo,true,false,false,true,false,false,true,true,true,true,false,false,false,false,true,false,false,false,true,false,false,Mamífero
+mangosta,true,false,false,true,false,false,true,true,true,true,false,false,false,false,true,false,false,false,true,false,true,Mamífero
+polilla,true,false,true,false,true,false,false,false,false,true,false,false,false,false,false,false,true,false,false,false,false,Insecto
+gallipato,false,false,true,false,false,true,true,true,true,true,false,false,false,false,true,false,false,false,true,false,false,Anfibio
+pulpo,false,false,true,false,false,true,true,false,false,false,false,false,false,false,false,false,false,true,false,false,true,Celenterados
+zarigüeya,true,false,false,true,false,false,true,true,true,true,false,false,false,false,true,false,false,false,true,false,false,Mamífero
+órice,true,false,false,true,false,false,false,true,true,true,false,false,false,false,true,false,false,false,true,false,true,Mamífero
+avestruz,false,true,true,false,false,false,false,false,true,true,false,false,false,true,false,false,false,false,true,false,true,Ave
+periquito,false,true,true,false,true,false,false,false,true,true,false,false,false,true,false,false,false,false,true,true,false,Ave
+pingüino,false,true,true,false,false,true,true,false,true,true,false,false,false,true,false,false,false,false,true,false,true,Ave
+faisán,false,true,true,false,true,false,false,false,true,true,false,false,false,true,false,false,false,false,true,false,false,Ave
+lucio,false,false,true,false,false,true,true,true,true,false,false,true,true,false,false,false,false,false,true,false,true,Pez
+piraña,false,false,true,false,false,true,true,true,true,false,false,true,true,false,false,false,false,false,true,false,false,Pez
+crótalo,false,false,true,false,false,false,true,true,true,true,true,false,true,false,false,false,false,false,true,false,false,Reptil
+ornitorrinco,true,false,true,true,false,true,true,false,true,true,false,false,false,false,true,false,false,false,true,false,true,Mamífero
+turón,true,false,false,true,false,false,true,true,true,true,false,false,false,false,true,false,false,false,true,false,true,Mamífero
+poni,true,false,false,true,false,false,false,true,true,true,false,false,false,false,true,false,false,false,true,true,true,Mamífero
+marsopa,false,false,false,true,false,true,true,true,true,true,false,true,true,false,false,false,false,false,true,false,true,Mamífero
+puma,true,false,false,true,false,false,true,true,true,true,false,false,false,false,true,false,false,false,true,false,true,Mamífero
+minino,true,false,false,true,false,false,true,true,true,true,false,false,false,false,true,false,false,false,true,true,true,Mamífero
+mapache,true,false,false,true,false,false,true,true,true,true,false,false,false,false,true,false,false,false,true,false,true,Mamífero
+reno,true,false,false,true,false,false,false,true,true,true,false,false,false,false,true,false,false,false,true,true,true,Mamífero
+ñandú,false,true,true,false,false,false,true,false,true,true,false,false,false,true,false,false,false,false,true,false,true,Ave
+escorpión,false,false,false,false,false,false,true,false,false,true,true,false,false,false,false,false,false,true,true,false,false,Arácnido
+caballo-marino,false,false,true,false,false,true,false,true,true,false,false,true,true,false,false,false,false,false,true,false,false,Pez
+foca,true,false,false,true,false,true,true,true,true,true,false,true,true,false,false,false,false,false,false,false,true,Mamífero
+león-marino,true,false,false,true,false,true,true,true,true,true,false,true,false,true,false,false,false,false,true,false,true,Mamífero
+hidroserpiente,false,false,false,false,false,true,true,true,true,false,true,false,true,false,false,false,false,false,true,false,false,Reptil
+medusa,false,false,true,false,false,true,true,false,false,false,true,false,true,false,false,false,false,false,false,false,false,Celenterados
+rayador,false,true,true,false,true,true,true,false,true,true,false,false,false,true,false,false,false,false,true,false,false,Ave
+págalo,false,true,true,false,true,true,true,false,true,true,false,false,false,true,false,false,false,false,true,false,false,Ave
+lución,false,false,true,false,false,false,true,true,true,true,false,false,true,false,false,false,false,false,true,false,false,Reptil
+caracol,false,false,true,false,false,false,false,false,false,true,false,false,true,false,false,false,false,false,false,false,false,Molusco
+lenguado,false,false,true,false,false,true,false,true,true,false,false,true,true,false,false,false,false,false,true,false,false,Pez
+gorrión,false,true,true,false,true,false,false,false,true,true,false,false,false,true,false,false,false,false,true,false,false,Ave
+ardilla,true,false,false,true,false,false,false,true,true,true,false,false,false,true,false,false,false,false,true,false,false,Mamífero
+asteroideos,false,false,true,false,false,true,true,false,false,false,false,false,false,false,false,true,false,false,false,false,false,Equinodermos
+mantarraya,false,false,true,false,false,true,true,true,true,false,true,true,true,false,false,false,false,false,true,false,true,Pez
+cisne,false,true,true,false,true,true,false,false,true,true,false,false,false,true,false,false,false,false,true,false,true,Ave
+termita,false,false,true,false,false,false,false,false,false,true,false,false,false,false,false,false,true,false,false,false,false,Insecto
+sapo,false,false,true,false,false,true,false,true,true,true,false,false,false,false,true,false,false,false,false,false,false,Anfibio
+tortuga,false,false,true,false,false,false,false,false,true,true,false,false,false,false,true,false,false,false,true,false,true,Reptil
+tuátara,false,false,true,false,false,false,true,true,true,true,false,false,false,false,true,false,false,false,true,false,false,Reptil
+atún,false,false,true,false,false,true,true,true,true,false,false,true,true,false,false,false,false,false,true,false,true,Pez
+vampiro,true,false,false,true,true,false,false,true,true,true,false,false,false,true,false,false,false,false,true,false,false,Mamífero
+campañol,true,false,false,true,false,false,false,true,true,true,false,false,false,false,true,false,false,false,true,false,false,Mamífero
+buitre,false,true,true,false,true,false,true,false,true,true,false,false,false,true,false,false,false,false,true,false,true,Ave
+ualabí,true,false,false,true,false,false,false,true,true,true,false,false,false,true,false,false,false,false,true,false,true,Mamífero
+avispa,true,false,true,false,true,false,false,false,false,true,true,false,false,false,false,false,true,false,false,false,false,Insecto
+lobo,true,false,false,true,false,false,true,true,true,true,false,false,false,false,true,false,false,false,true,false,true,Mamífero
+gusano,false,false,true,false,false,false,false,false,false,true,false,false,true,false,false,false,false,false,false,false,false,Anélidos
+chochín,false,true,true,false,true,false,false,false,true,true,false,false,false,true,false,false,false,false,true,false,false,Ave
