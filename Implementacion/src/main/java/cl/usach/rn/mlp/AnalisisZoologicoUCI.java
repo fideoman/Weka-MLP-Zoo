@@ -2,22 +2,41 @@ package cl.usach.rn.mlp;
 
 import java.io.File;
 import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartFrame;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
 
 import cl.usach.rn.mlp.utilidades.IWSS;
 import weka.classifiers.Evaluation;
 import weka.classifiers.functions.MultilayerPerceptron;
 import weka.core.Instances;
+import weka.filters.Filter;
+import weka.filters.unsupervised.attribute.Remove;
 
-@SuppressWarnings("unused")
 public class AnalisisZoologicoUCI {
 
 	public static void main(String[] args) {
-		AnalisisZoologicoUCI.pruebaMLP("zoo.arff", 0.1, 0.1, 1000, 0, 0, 20, false, false, true, "3", true, true, true, false, false, false);
+		AnalisisZoologicoUCI.pruebaMLP(1, "zoo.arff", 0, 0.1, 0.1, 8000, 0, 20, "a");
+		
+		
 	}
 	
-	public static void pruebaMLP(String archivo, double learningRate, double momentum, int tiempoEntrenamiento, int tamanoValidacion, int semilla, int maximoErroresVal, boolean gui, boolean autoBuild,
-			boolean filtroNominalBinario, String capasOcultas, boolean normalizarClasesNumericas, boolean normalizarAtributos, boolean admiteReseteo, boolean admiteDecaimiento, boolean noRevisarCarac, boolean debug) {
+	public static void pruebaMLP(int id, String archivo, int numeroAttribsEliminar, double learningRate, double momentum, int tiempoEntrenamiento, int tamanoValidacion, int maximoErroresVal, String capasOcultas) {
+		pruebaMLP(id, archivo, numeroAttribsEliminar, learningRate, momentum, tiempoEntrenamiento, tamanoValidacion, maximoErroresVal, capasOcultas, 
+				0, false, false, true, true, true, true, false, false, false);
+	}
+	
+	public static void pruebaMLP(int id, String archivo, int numeroAttribsEliminar, double learningRate, double momentum, int tiempoEntrenamiento, int tamanoValidacion, int maximoErroresVal, String capasOcultas, 
+			int semilla, boolean gui, boolean autoBuild, boolean filtroNominalBinario,  boolean normalizarClasesNumericas, boolean normalizarAtributos, boolean admiteReseteo, 
+			boolean admiteDecaimiento, boolean noRevisarCarac, boolean debug) {
 		ClassLoader cargadorContexto = Thread.currentThread().getContextClassLoader();
 
 		try {
@@ -44,16 +63,22 @@ public class AnalisisZoologicoUCI {
 			 * Intelligence. 25(5):605-625 */
 			
 			// Entrega, por cada atributo, su nivel de "eliminable".
-			// IWSS iwss = new IWSS();
-			// System.out.println(Arrays.toString(iwss.getRanking(prueba)));
-			// Resultado del Zoo Dataset original:
-			// [0, 4, 3, 8, 1, 2, 9, 10, 14, 13, 19, 15, 12, 17, 5, 6, 21, 11, 18, 7, 16, 20]
-			
-			// En concreto, los 5 más eliminables son:
-			// 5_patas: 21, pequeño: 20, respirador: 19, 8_patas: 18, 0_patas: 17
-
-			// Test suite
-			
+			IWSS iwss = new IWSS();
+			int[] listaEliminar = new int[numeroAttribsEliminar];
+			List<Integer> listaRanking = Arrays.stream(iwss.getRanking(prueba)).boxed().collect(Collectors.toList());
+			// Creamos un arreglo de índices que serán eliminados. Los más eliminables.
+			int j = 0;
+			for (int i = listaRanking.size(); i > (listaRanking.size() - numeroAttribsEliminar); i--) {
+				listaEliminar[j] = listaRanking.indexOf(i-1);
+				j++;
+			}
+			// Eliminamos
+			Remove removerInstancias = new Remove();
+			removerInstancias.setAttributeIndicesArray(listaEliminar);
+			removerInstancias.setInputFormat(prueba);
+			entrenamiento = Filter.useFilter(prueba, removerInstancias);
+			prueba = Filter.useFilter(prueba, removerInstancias);
+						
 			// Parámetros:
 			mlp.setLearningRate(learningRate); 						// Tasa de aprendizaje. De 0 a 1. Por defecto: 0.3
 			mlp.setMomentum(momentum); 								// Momentum para el algoritmo de retro-propagación. De 0 a 1. Por defecto: 0.2
@@ -73,8 +98,8 @@ public class AnalisisZoologicoUCI {
 					  													o las letras 'a' = (atributos + clases) / 2, 
 					  													'i' = atributos, 
 					  													'o' = clases, 
-					  													't' = atributos .+ clases (para comodines).
-					  												Por defecto = a */
+					  													't' = atributos + clases.
+					  													Por defecto = a */
 			mlp.setNormalizeNumericClass(normalizarClasesNumericas); // Indicar acá si las clases numéricas serán normalizadas o no.
 			mlp.setNormalizeAttributes(normalizarAtributos); 		// Indicar acá si los atributos serán normalizados o no.
 			mlp.setReset(admiteReseteo); 							// Indicar acá si se permite que la red sea reiniciada o no.
@@ -89,20 +114,21 @@ public class AnalisisZoologicoUCI {
 			Evaluation eval = new Evaluation(entrenamiento);
 			eval.evaluateModel(mlp, prueba);
 			
-			// Imprimir todos los resultados.		
-			System.out.println("Tasa de aprendizaje:" + mlp.getLearningRate());
+			// Imprimir todos los resultados.	
+			System.out.println("ID de ejecución: " + id);
+			System.out.println("Tasa de aprendizaje: " + mlp.getLearningRate());
 			System.out.println("Momentum: " + mlp.getMomentum());
-			System.out.println("Tiempo de entrenamiento: " + mlp.getTrainingTime());
-			System.out.println("Tamaño de validación: " + mlp.getValidationSetSize());
+			System.out.println("Tiempo de entrenamiento máximo: " + mlp.getTrainingTime());
+			System.out.println("Tamaño de validación: " + (mlp.getValidationSetSize() == 0 ? "0 (Se usa tiempo de Entrenamiento)" : mlp.getValidationSetSize()));
 			System.out.println("Semilla: " + mlp.getSeed());
-			System.out.println("Errores de validacion aceptados :" + mlp.getValidationThreshold());
+			System.out.println("Errores de validacion aceptados: " + mlp.getValidationThreshold());
 			System.out.println("Tiene filtro de nominal a binario?: " + mlp.getNominalToBinaryFilter());
 			System.out.println("Capas ocultas: " + mlp.getHiddenLayers());
 			System.out.println("Se normalizan las clases numéricas?: " + mlp.getNormalizeNumericClass());
 			System.out.println("Se normalizan los atributos?: " + mlp.getNormalizeAttributes());
 			System.out.println("Puede resetearse la red internamente?: " + mlp.getReset());
 			System.out.println("Puede la red tener un aprendizaje en decaimiento?: " + mlp.getDecay());
-			System.out.println("Chequeo características?: " + mlp.getDoNotCheckCapabilities());
+			System.out.println("Revisar características?: " + !mlp.getDoNotCheckCapabilities());
 			System.out.println("Estoy en debugging?: " + mlp.getDebug());
 			System.out.println("====================");
 			System.out.println("Error medio absoluto: " + eval.meanAbsoluteError());
@@ -129,4 +155,25 @@ public class AnalisisZoologicoUCI {
 			ex.printStackTrace();
 		}
 	}
+	
+	public static void grafico(String rutaGrafico, String titulo, String linea1, String linea2, ArrayList<Integer> ids, ArrayList<Double> indice) {
+		final XYSeries serie1 = new XYSeries(linea1);
+		final XYSeries serie2 = new XYSeries(linea2);
+		for(int i=0;i<ids.size();i++) {
+			serie1.add(i, ids.get(i));
+		}
+		for(int i=0;i<indice.size();i++) {
+			serie2.add(i, indice.get(i));
+		}
+		final XYSeriesCollection datos = new XYSeriesCollection();
+		datos.addSeries(serie1);
+		datos.addSeries(serie2);
+		final JFreeChart chart = ChartFactory.createXYLineChart(titulo, "ID Ejecución", "Valor Indice", datos,
+				PlotOrientation.VERTICAL, true, true, false);
+
+		ChartFrame frame = new ChartFrame(titulo,chart);
+		frame.pack();
+		frame.setVisible(true);
+	}
+	
 }
