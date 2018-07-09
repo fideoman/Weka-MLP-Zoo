@@ -1,14 +1,19 @@
 package cl.usach.rn.mlp;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartFrame;
+import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.xy.XYSeries;
@@ -23,22 +28,58 @@ import weka.filters.unsupervised.attribute.Remove;
 
 public class AnalisisZoologicoUCI {
 
-	public static void main(String[] args) {
-		AnalisisZoologicoUCI.pruebaMLP(1, "zoo.arff", 0, 0.1, 0.1, 8000, 0, 20, "a");
+	public static ArrayList<Double> erroresMediaAbsoluta = new ArrayList<Double>();
+	public static ArrayList<Double> erroresMediaRaizCuadrada = new ArrayList<Double>();
+	public static ArrayList<Double> erroresRelativoAbsoluto = new ArrayList<Double>();
+	public static ArrayList<Double> erroresRelativoRaizCuadrada = new ArrayList<Double>();
+	public static ArrayList<Double> costosPromedioIncorrectas = new ArrayList<Double>();
+	public static ArrayList<Double> porcentajesCorrecto = new ArrayList<Double>();
+	public static ArrayList<Double> tasasError = new ArrayList<Double>();
+	public static ArrayList<Double> concordanciasKappa = new ArrayList<Double>();		
+	
+	public static void main(String[] args) throws FileNotFoundException, IOException {
+		// Timestamp de la ejecución
+		long timeStamp = (new Timestamp(System.currentTimeMillis())).getTime();		
 		
+		// TODO: Bien fea la redirección, pero en honor del tiempo... Todos los System.out serán depositados en dicho archivo. Se puede cambiar.
+		System.setOut(new PrintStream(new File(System.getProperty("user.dir")+"/output/salidaEjecucion-"+ timeStamp +".txt")));
 		
+		int z = 0;
+		
+		// Listas de parámetros
+		int[] numeroAttribs = new int[]{ 0, 5 };
+		double[] tasasAprendizaje = new double[] {0.1, 0.3};
+		double[] momentums = new double[] {0.1, 0.3};
+		int[] tamanoValidaciones = new int[] {0, 20};
+		int[] tiempoEntrenamiento = new int[] {3000, 8000};
+		int[] maximoErrores = new int[] {10, 20};
+		String[] capasOcultas = new String[] {"a", "a,a"}; 
+				
+		for(int i = 0; i <= 127; i++) {
+			char[] combinacion = String.format("%7s", Integer.toBinaryString(i)).replace(' ', '0').toCharArray();
+			AnalisisZoologicoUCI.pruebaMLP(z++, "zoo.arff", numeroAttribs[Character.getNumericValue(combinacion[6])], tasasAprendizaje[Character.getNumericValue(combinacion[5])], momentums[Character.getNumericValue(combinacion[4])], tamanoValidaciones[Character.getNumericValue(combinacion[3])], tiempoEntrenamiento[Character.getNumericValue(combinacion[2])], maximoErrores[Character.getNumericValue(combinacion[1])], capasOcultas[Character.getNumericValue(combinacion[0])]);
+		}			
+		
+		grafico("erroresMediaAbsoluta"+timeStamp, "Errores Medias Absolutas", "Error Media Absoluta", erroresMediaAbsoluta);
+		grafico("erroresMediaRaizCuadrada"+timeStamp, "Errores Raices Medias Cuadradas", "Error Raíz Media Cuadrada", erroresMediaRaizCuadrada);
+		grafico("erroresRelativoAbsoluto"+timeStamp, "Errores Relativos Absolutos", "Error Relativo Absoluta", erroresRelativoAbsoluto);
+		grafico("erroresRelativoRaizCuadrada"+timeStamp, "Errores Raíces Relativas Cuadradas", "Error Raíz Relativa Cuadrada", erroresRelativoRaizCuadrada);
+		grafico("costosPromedioIncorrectas"+timeStamp, "Costos Promedio de Incorrectas", "Costo Promedio Incorrecto", costosPromedioIncorrectas);
+		grafico("porcentajesCorrecto"+timeStamp, "Porcentajes Correctos", "Porcentaje Correcto", porcentajesCorrecto);
+		grafico("tasasError"+timeStamp, "Tasas de Error", "Tasa de Error", tasasError);
+		grafico("concordanciasKappa"+timeStamp, "Niveles de Concordancia Kappa", "Nivel de Concordancia Kappa", concordanciasKappa);
 	}
 	
-	public static void pruebaMLP(int id, String archivo, int numeroAttribsEliminar, double learningRate, double momentum, int tiempoEntrenamiento, int tamanoValidacion, int maximoErroresVal, String capasOcultas) {
-		pruebaMLP(id, archivo, numeroAttribsEliminar, learningRate, momentum, tiempoEntrenamiento, tamanoValidacion, maximoErroresVal, capasOcultas, 
+	public static void pruebaMLP(int id, String archivo, int numeroAttribsEliminar, double learningRate, double momentum, int tamanoValidacion, int tiempoEntrenamiento, int maximoErroresVal, String capasOcultas) throws FileNotFoundException {
+		pruebaMLP(id, archivo, numeroAttribsEliminar, learningRate, momentum, tamanoValidacion, tiempoEntrenamiento, maximoErroresVal, capasOcultas, 
 				0, false, false, true, true, true, true, false, false, false);
 	}
 	
-	public static void pruebaMLP(int id, String archivo, int numeroAttribsEliminar, double learningRate, double momentum, int tiempoEntrenamiento, int tamanoValidacion, int maximoErroresVal, String capasOcultas, 
+	public static void pruebaMLP(int id, String archivo, int numeroAttribsEliminar, double learningRate, double momentum, int tamanoValidacion, int tiempoEntrenamiento, int maximoErroresVal, String capasOcultas, 
 			int semilla, boolean gui, boolean autoBuild, boolean filtroNominalBinario,  boolean normalizarClasesNumericas, boolean normalizarAtributos, boolean admiteReseteo, 
-			boolean admiteDecaimiento, boolean noRevisarCarac, boolean debug) {
-		ClassLoader cargadorContexto = Thread.currentThread().getContextClassLoader();
-
+			boolean admiteDecaimiento, boolean noRevisarCarac, boolean debug) throws FileNotFoundException {
+		ClassLoader cargadorContexto = Thread.currentThread().getContextClassLoader();		
+		
 		try {
 			// Lectura del set de entrenamiento y prueba. Se cierran los archivos inmediatamente, una vez leídas las instancias.
 			FileReader lectorEntrenamiento = new FileReader(new File(cargadorContexto.getResource(archivo).toURI()));
@@ -131,10 +172,10 @@ public class AnalisisZoologicoUCI {
 			System.out.println("Revisar características?: " + !mlp.getDoNotCheckCapabilities());
 			System.out.println("Estoy en debugging?: " + mlp.getDebug());
 			System.out.println("====================");
-			System.out.println("Error medio absoluto: " + eval.meanAbsoluteError());
-			System.out.println("Error medio cuadrado: " + eval.rootMeanSquaredError());
+			System.out.println("Error media absoluta: " + eval.meanAbsoluteError());
+			System.out.println("Error media raíz cuadrada: " + eval.rootMeanSquaredError());
 			System.out.println("Error relativo absoluto: " + eval.relativeAbsoluteError()+" %");
-			System.out.println("Error relativo cuadrado: " + eval.rootRelativeSquaredError()+" %");
+			System.out.println("Error relativo raíz cuadrada: " + eval.rootRelativeSquaredError()+" %");
 			System.out.println("Número de instancias: " + eval.numInstances());
 			System.out.println("Costo de las clasificaciones incorrectas sobre el total (promedio): " + eval.avgCost());
 			System.out.println("Costo total SUM (costo de cada predicción x ancho de cada instancia) : " + eval.totalCost());
@@ -150,30 +191,34 @@ public class AnalisisZoologicoUCI {
 			System.out.println("Entropía total del esquema: " + eval.SFSchemeEntropy());
 			System.out.println("Tamaño promedio de las regiones predecidas: " + eval.sizeOfPredictedRegions());
 			System.out.println(eval.toClassDetailsString("Detalle de clases:"));
-			System.out.println(eval.toMatrixString("Matriz de confusión:"));			
+			System.out.println(eval.toMatrixString("Matriz de confusión:"));
+			
+			// Guardar en listas globales
+			erroresMediaAbsoluta.add(eval.meanAbsoluteError());
+			erroresMediaRaizCuadrada.add(eval.rootMeanSquaredError());
+			erroresRelativoAbsoluto.add(eval.relativeAbsoluteError());
+			erroresRelativoRaizCuadrada.add(eval.rootRelativeSquaredError());
+			costosPromedioIncorrectas.add(eval.avgCost());
+			porcentajesCorrecto.add(eval.pctCorrect());
+			tasasError.add(eval.errorRate());
+			concordanciasKappa.add(eval.kappa());			
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 	}
 	
-	public static void grafico(String rutaGrafico, String titulo, String linea1, String linea2, ArrayList<Integer> ids, ArrayList<Double> indice) {
-		final XYSeries serie1 = new XYSeries(linea1);
-		final XYSeries serie2 = new XYSeries(linea2);
-		for(int i=0;i<ids.size();i++) {
-			serie1.add(i, ids.get(i));
-		}
+	public static void grafico(String nombreArchivo, String titulo, String linea, ArrayList<Double> indice) throws FileNotFoundException, IOException {
+		String rutaGrafico = System.getProperty("user.dir")+"/output/";
+		final XYSeries serie1 = new XYSeries(linea);
 		for(int i=0;i<indice.size();i++) {
-			serie2.add(i, indice.get(i));
+			serie1.add(i, indice.get(i));
 		}
 		final XYSeriesCollection datos = new XYSeriesCollection();
 		datos.addSeries(serie1);
-		datos.addSeries(serie2);
 		final JFreeChart chart = ChartFactory.createXYLineChart(titulo, "ID Ejecución", "Valor Indice", datos,
 				PlotOrientation.VERTICAL, true, true, false);
 
-		ChartFrame frame = new ChartFrame(titulo,chart);
-		frame.pack();
-		frame.setVisible(true);
+		ChartUtilities.writeChartAsPNG(new FileOutputStream(rutaGrafico+"/"+ nombreArchivo+".png"), chart, 1280, 720);
 	}
 	
 }
