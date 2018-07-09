@@ -53,12 +53,19 @@ public class AnalisisZoologicoUCI {
 		int[] tamanoValidaciones = new int[] {0, 20};
 		int[] tiempoEntrenamiento = new int[] {3000, 8000};
 		int[] maximoErrores = new int[] {10, 20};
-		String[] capasOcultas = new String[] {"a", "a,a"}; 
+		String[] capasOcultas = new String[] {"2", "3"}; 
 				
 		for(int i = 0; i <= 127; i++) {
 			char[] combinacion = String.format("%7s", Integer.toBinaryString(i)).replace(' ', '0').toCharArray();
 			AnalisisZoologicoUCI.pruebaMLP(z++, "zoo.arff", numeroAttribs[Character.getNumericValue(combinacion[6])], tasasAprendizaje[Character.getNumericValue(combinacion[5])], momentums[Character.getNumericValue(combinacion[4])], tamanoValidaciones[Character.getNumericValue(combinacion[3])], tiempoEntrenamiento[Character.getNumericValue(combinacion[2])], maximoErrores[Character.getNumericValue(combinacion[1])], capasOcultas[Character.getNumericValue(combinacion[0])]);
-		}			
+		}	
+		
+		capasOcultas = new String[] {"4", "4,4"};
+				
+		for(int i = 0; i <= 127; i++) {
+			char[] combinacion = String.format("%7s", Integer.toBinaryString(i)).replace(' ', '0').toCharArray();
+			AnalisisZoologicoUCI.pruebaMLP(z++, "zoo.arff", numeroAttribs[Character.getNumericValue(combinacion[6])], tasasAprendizaje[Character.getNumericValue(combinacion[5])], momentums[Character.getNumericValue(combinacion[4])], tamanoValidaciones[Character.getNumericValue(combinacion[3])], tiempoEntrenamiento[Character.getNumericValue(combinacion[2])], maximoErrores[Character.getNumericValue(combinacion[1])], capasOcultas[Character.getNumericValue(combinacion[0])]);
+		}	
 		
 		grafico("erroresMediaAbsoluta"+timeStamp, "Errores Medias Absolutas", "Error Media Absoluta", erroresMediaAbsoluta);
 		grafico("erroresMediaRaizCuadrada"+timeStamp, "Errores Raices Medias Cuadradas", "Error Raíz Media Cuadrada", erroresMediaRaizCuadrada);
@@ -209,13 +216,13 @@ public class AnalisisZoologicoUCI {
 	
 	public static void grafico(String nombreArchivo, String titulo, String linea, ArrayList<Double> indice) throws FileNotFoundException, IOException {
 		String rutaGrafico = System.getProperty("user.dir")+"/output/";
-		final XYSeries serie1 = new XYSeries(linea);
-		for(int i=0;i<indice.size();i++) {
-			serie1.add(i, indice.get(i));
+		XYSeries serie1 = new XYSeries(linea);
+		for(int i=1;i<=indice.size();i++) {
+			serie1.add(i, indice.get(i-1));
 		}
-		final XYSeriesCollection datos = new XYSeriesCollection();
+		XYSeriesCollection datos = new XYSeriesCollection();
 		datos.addSeries(serie1);
-		final JFreeChart chart = ChartFactory.createXYLineChart(titulo, "ID Ejecución", "Valor Indice", datos,
+		JFreeChart chart = ChartFactory.createXYLineChart(titulo, "ID Ejecución", "Valor Indice", datos,
 				PlotOrientation.VERTICAL, true, true, false);
 
 		ChartUtilities.writeChartAsPNG(new FileOutputStream(rutaGrafico+"/"+ nombreArchivo+".png"), chart, 1280, 720);
