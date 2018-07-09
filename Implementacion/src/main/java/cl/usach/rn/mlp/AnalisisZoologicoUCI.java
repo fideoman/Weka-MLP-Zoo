@@ -49,7 +49,7 @@ public class AnalisisZoologicoUCI {
 		// Listas de parámetros
 		int[] numeroAttribs = new int[]{ 0, 5 };
 		double[] tasasAprendizaje = new double[] {0.1, 0.3};
-		double[] momentums = new double[] {0.2, 0.4};
+		double[] momentums = new double[] {0.4, 0.6};
 		int[] tamanoValidaciones = new int[] {0, 20};
 		int[] tiempoEntrenamiento = new int[] {3000, 8000};
 		int[] maximoErrores = new int[] {5, 20};
