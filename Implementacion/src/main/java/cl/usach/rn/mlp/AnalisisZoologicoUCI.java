@@ -60,21 +60,20 @@ public class AnalisisZoologicoUCI {
 			AnalisisZoologicoUCI.pruebaMLP(z++, "zoo.arff", numeroAttribs[Character.getNumericValue(combinacion[6])], tasasAprendizaje[Character.getNumericValue(combinacion[5])], momentums[Character.getNumericValue(combinacion[4])], tamanoValidaciones[Character.getNumericValue(combinacion[3])], tiempoEntrenamiento[Character.getNumericValue(combinacion[2])], maximoErrores[Character.getNumericValue(combinacion[1])], capasOcultas[Character.getNumericValue(combinacion[0])]);
 		}	
 		
-		capasOcultas = new String[] {"4", "4,4"};
+		capasOcultas = new String[] {"4,4", "4"};
 				
 		for(int i = 0; i <= 127; i++) {
 			char[] combinacion = String.format("%7s", Integer.toBinaryString(i)).replace(' ', '0').toCharArray();
 			AnalisisZoologicoUCI.pruebaMLP(z++, "zoo.arff", numeroAttribs[Character.getNumericValue(combinacion[6])], tasasAprendizaje[Character.getNumericValue(combinacion[5])], momentums[Character.getNumericValue(combinacion[4])], tamanoValidaciones[Character.getNumericValue(combinacion[3])], tiempoEntrenamiento[Character.getNumericValue(combinacion[2])], maximoErrores[Character.getNumericValue(combinacion[1])], capasOcultas[Character.getNumericValue(combinacion[0])]);
 		}	
 		
-		grafico("erroresMediaAbsoluta"+timeStamp, "Errores Medias Absolutas", "Error Media Absoluta", erroresMediaAbsoluta);
-		grafico("erroresMediaRaizCuadrada"+timeStamp, "Errores Raices Medias Cuadradas", "Error Raíz Media Cuadrada", erroresMediaRaizCuadrada);
-		grafico("erroresRelativoAbsoluto"+timeStamp, "Errores Relativos Absolutos", "Error Relativo Absoluta", erroresRelativoAbsoluto);
-		grafico("erroresRelativoRaizCuadrada"+timeStamp, "Errores Raíces Relativas Cuadradas", "Error Raíz Relativa Cuadrada", erroresRelativoRaizCuadrada);
-		grafico("costosPromedioIncorrectas"+timeStamp, "Costos Promedio de Incorrectas", "Costo Promedio Incorrecto", costosPromedioIncorrectas);
-		grafico("porcentajesCorrecto"+timeStamp, "Porcentajes Correctos", "Porcentaje Correcto", porcentajesCorrecto);
-		grafico("tasasError"+timeStamp, "Tasas de Error", "Tasa de Error", tasasError);
-		grafico("concordanciasKappa"+timeStamp, "Niveles de Concordancia Kappa", "Nivel de Concordancia Kappa", concordanciasKappa);
+		grafico("erroresMediaAbsoluta"+timeStamp, "Errores Medias Absolutas (Menos es mejor)", "Error Media Absoluta", erroresMediaAbsoluta);
+		grafico("erroresMediaRaizCuadrada"+timeStamp, "Errores Raices Medias Cuadradas (Menos es mejor)", "Error Raíz Media Cuadrada", erroresMediaRaizCuadrada);
+		grafico("erroresRelativoAbsoluto"+timeStamp, "Errores Relativos Absolutos (Menos es mejor)", "Error Relativo Absoluta", erroresRelativoAbsoluto);
+		grafico("erroresRelativoRaizCuadrada"+timeStamp, "Errores Raíces Relativas Cuadradas (Menos es mejor)", "Error Raíz Relativa Cuadrada", erroresRelativoRaizCuadrada);
+		grafico("porcentajesCorrecto"+timeStamp, "Porcentajes Correctos (Más es mejor)", "Porcentaje Correcto", porcentajesCorrecto);
+		grafico("tasasError"+timeStamp, "Tasas de Error (Menos es mejor)", "Tasa de Error", tasasError);
+		grafico("concordanciasKappa"+timeStamp, "Niveles de Concordancia Kappa (Más es mejor)", "Nivel de Concordancia Kappa", concordanciasKappa);
 	}
 	
 	public static void pruebaMLP(int id, String archivo, int numeroAttribsEliminar, double learningRate, double momentum, int tamanoValidacion, int tiempoEntrenamiento, int maximoErroresVal, String capasOcultas) throws FileNotFoundException {
