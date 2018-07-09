@@ -44,7 +44,7 @@ public class AnalisisZoologicoUCI {
 		// TODO: Bien fea la redirección, pero en honor del tiempo... Todos los System.out serán depositados en dicho archivo. Se puede cambiar.
 		System.setOut(new PrintStream(new File(System.getProperty("user.dir")+"/output/salidaEjecucion-"+ timeStamp +".txt")));
 		
-		int z = 0;
+		int z = 1;
 		
 		// Listas de parámetros
 		int[] numeroAttribs = new int[]{ 0, 5 };
