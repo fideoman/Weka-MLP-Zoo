@@ -49,18 +49,11 @@ public class AnalisisZoologicoUCI {
 		// Listas de parámetros
 		int[] numeroAttribs = new int[]{ 0, 5 };
 		double[] tasasAprendizaje = new double[] {0.1, 0.3};
-		double[] momentums = new double[] {0.1, 0.3};
+		double[] momentums = new double[] {0.2, 0.4};
 		int[] tamanoValidaciones = new int[] {0, 20};
 		int[] tiempoEntrenamiento = new int[] {3000, 8000};
-		int[] maximoErrores = new int[] {10, 20};
-		String[] capasOcultas = new String[] {"2", "3"}; 
-				
-		for(int i = 0; i <= 127; i++) {
-			char[] combinacion = String.format("%7s", Integer.toBinaryString(i)).replace(' ', '0').toCharArray();
-			AnalisisZoologicoUCI.pruebaMLP(z++, "zoo.arff", numeroAttribs[Character.getNumericValue(combinacion[6])], tasasAprendizaje[Character.getNumericValue(combinacion[5])], momentums[Character.getNumericValue(combinacion[4])], tamanoValidaciones[Character.getNumericValue(combinacion[3])], tiempoEntrenamiento[Character.getNumericValue(combinacion[2])], maximoErrores[Character.getNumericValue(combinacion[1])], capasOcultas[Character.getNumericValue(combinacion[0])]);
-		}	
-		
-		capasOcultas = new String[] {"4,4", "4"};
+		int[] maximoErrores = new int[] {5, 20};
+		String[] capasOcultas = new String[] {"3", "4"}; 
 				
 		for(int i = 0; i <= 127; i++) {
 			char[] combinacion = String.format("%7s", Integer.toBinaryString(i)).replace(' ', '0').toCharArray();
@@ -163,6 +156,7 @@ public class AnalisisZoologicoUCI {
 			
 			// Imprimir todos los resultados.	
 			System.out.println("ID de ejecución: " + id);
+			System.out.println("Numero atributos eliminados: " + numeroAttribsEliminar);
 			System.out.println("Tasa de aprendizaje: " + mlp.getLearningRate());
 			System.out.println("Momentum: " + mlp.getMomentum());
 			System.out.println("Tiempo de entrenamiento máximo: " + mlp.getTrainingTime());
